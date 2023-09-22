@@ -1,0 +1,46 @@
+File: SQL_ExtraClass_22_09_2023
+- By A.Kishore Kumar
+
+Q1. write a query to print Pneumonia patients first name who is weighting more than 100?
+Ans1.
+SELECT p.first_name, a.patient_id
+FROM admissions AS a
+INNER JOIN patients AS p ON a.patient_id = p.patient_id
+WHERE a.diagnosis = 'Pneumonia' AND p.weight > 100;
+
+Q2. Write a query to print doctor attending id who attended lowest patients and how many patients he/she attended?
+Ans2.
+SELECT attending_doctor_id, COUNT(*) AS patients_attended
+FROM admissions
+GROUP BY attending_doctor_id
+ORDER BY patients_attended
+LIMIT 1;
+
+Q3. Write a SQL qwery to show the doctor id and last_name who attended the highest patients?
+Ans3.
+SELECT doctor_id, last_name
+FROM doctors
+WHERE doctor_id = (
+    SELECT attending_doctor_id
+    FROM admissions
+    GROUP BY attending_doctor_id
+    ORDER BY COUNT(*) DESC
+    LIMIT 1);
+
+Q4. Write query to show all Ontario province patients Id's who are allergic to 'Honey' and 'Sulfa'?
+Ans4.
+SELECT p.patient_id
+FROM patients p
+WHERE p.province_id = 'ON'
+AND p.allergies IN ('Honey', 'Sulfa')
+;
+---------
+"OR"
+---------
+Ans4.
+SELECT p.patient_id
+FROM patients p
+JOIN province_names n ON p.province_id = n.province_id
+WHERE n.province_name = 'Ontario'
+AND p.allergies IN ('Honey', 'Sulfa')
+;
